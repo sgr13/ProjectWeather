@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use WeatherBundle\Entity\City;
 use WeatherBundle\Form\CityType;
 
@@ -15,9 +16,29 @@ class GetDataController extends Controller
     /**
      * @Route("/get", name="get")
      */
-    public function getAction()
+    public function getAction(Request $request)
     {
-        return $this->render('WeatherBundle:Weather:get.html.twig', array());
+        $cityRepository = $this->getDoctrine()->getRepository('WeatherBundle:City');
+        $cities = $cityRepository->findAll();
+        $city = null;
+
+        if (!$cities) {
+            throw new NotFoundHttpException('error could not load database');
+        }
+
+        if ($request->request->get('selectCity')) {
+            $selectedCity = $request->request->get('selectCity');
+            $selectedCiteExploded = explode('|', $selectedCity);
+            $code = $selectedCiteExploded[0];
+            $city = $selectedCiteExploded[1];
+            $session = $request->getSession();
+            $session->set('cityCode', $code);
+        }
+
+        return $this->render('WeatherBundle:Weather:get.html.twig', array(
+            'cities' => $cities,
+            'selectedCity' => $city
+        ));
     }
 
     /**
@@ -25,7 +46,9 @@ class GetDataController extends Controller
      */
     public function ajaxAction(Request $request)
     {
-        $value = file_get_contents("http://api.openweathermap.org/data/2.5/weather?id=3100796&lang=pl&units=metric&APPID=353e958b71e5f8b5e61e57ddcafb983c");
+        $session = $request->getSession();
+        $cityCode = $session->get('cityCode');
+        $value = file_get_contents("http://api.openweathermap.org/data/2.5/weather?id=" . $cityCode . "&lang=pl&units=metric&APPID=353e958b71e5f8b5e61e57ddcafb983c");
         return new JsonResponse($value);
     }
 
@@ -55,8 +78,17 @@ class GetDataController extends Controller
     /**
      * @Route("/edit")
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
+        $cityRepository = $this->getDoctrine()->getRepository('WeatherBundle:City');
+        $cities = $cityRepository->findAll();
 
+        if (!$cities) {
+            throw new NotFoundHttpException('error could not load database');
+        }
+
+        return $this->render('WeatherBundle:Weather:edit.html.twig', array(
+            'cities' => $cities
+        ));
     }
 }

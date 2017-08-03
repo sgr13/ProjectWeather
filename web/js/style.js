@@ -6,7 +6,6 @@ $(document).ready(function() {
             dataType: "json",
             success: function(data) {
                 var obj = jQuery.parseJSON(data);
-                var cityName = obj.name;
 
                 var dateTime = new Date();
                 var minutesTwoDigit = ("0" + dateTime.getMinutes()).substr(-2);
@@ -23,10 +22,16 @@ $(document).ready(function() {
                 $("#graphic").attr('src', src);
 
                 $("#time").html(time);
-                $("#temp").html(temp);
-                $("#city").html(cityName);
+                $("#temp").html(temp + ' | ' + time);
             }
         })
     }
-    setInterval(showWeather, 100);
+    showWeather();
+    setInterval(showWeather, 30000);
+
+    var city = $('#citySelection').attr('city');
+    alert(city);
+
+
+
 });
