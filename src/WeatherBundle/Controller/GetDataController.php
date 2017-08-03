@@ -61,9 +61,8 @@ class GetDataController extends Controller
         $form = $this->createForm(CityType::class, $city);
         $form->handleRequest($request);
 
-        if($form->isSubmitted()) {
+        if ($form->isSubmitted()) {
             $city = $form->getData();
-            var_dump($city);
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush();
@@ -76,7 +75,7 @@ class GetDataController extends Controller
     }
 
     /**
-     * @Route("/edit")
+     * @Route("/delete")
      */
     public function editAction(Request $request)
     {
@@ -87,8 +86,28 @@ class GetDataController extends Controller
             throw new NotFoundHttpException('error could not load database');
         }
 
-        return $this->render('WeatherBundle:Weather:edit.html.twig', array(
+        return $this->render('WeatherBundle:Weather:delete.html.twig', array(
             'cities' => $cities
         ));
+    }
+
+    /**
+     * @Route("/findCity")
+     */
+    public function findCityAction()
+    {
+        $value = file_get_contents("http://openweathermap.org/help/city_list.txt");
+        if (strpos($value, 'Bedzin') !== false) {
+            $cityList = explode(PHP_EOL, $value);
+            $matches = preg_grep('~Bedzin~', $cityList);
+            var_dump($matches);
+            $key = key($matches);
+            var_dump($key);
+            preg_match('~[0-9]{7}~', $matches[$key], $match);
+            var_dump($match);
+            return new Response("Działam");
+
+        }
+
     }
 }

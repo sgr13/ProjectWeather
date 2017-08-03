@@ -3,9 +3,12 @@
 {% block body %}
     <div style="margin-left: 40%; margin-right: 40%; border: solid 1px darkblue; width: 20%">
         <form action="{{ asset('get') }}" method="post" style="margin-left: 5%">
+            {% if selectedCity == null %}
+                {% set selectedCity = cities[0].name %}
+            {% endif %}
             <select name="selectCity" onchange="form.submit()" id="citySelection" city="{{ selectedCity }}">
                 {% for city in cities %}
-                <option value="{{ city.code }}|{{ city.name }}">{{ city.name }}</option>
+                <option value="{{ city.code }}|{{ city.name }}" class="selectCityOption">{{ city.name }}</option>
                 {% endfor %}
             </select>
         </form>

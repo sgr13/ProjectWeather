@@ -30,8 +30,11 @@ $(document).ready(function() {
     setInterval(showWeather, 30000);
 
     var city = $('#citySelection').attr('city');
-    alert(city);
-
-
-
+    console.log(city);
+    jQuery.each($('.selectCityOption'), function () {
+        console.log("hej");
+        if ($(this).html() == city) {
+            $(this).attr('selected', 'selected');
+        }
+    })
 });
