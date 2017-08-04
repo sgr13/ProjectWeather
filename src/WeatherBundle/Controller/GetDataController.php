@@ -94,20 +94,36 @@ class GetDataController extends Controller
     /**
      * @Route("/findCity")
      */
-    public function findCityAction()
+    public function findCityAction(Request $request)
     {
-        $value = file_get_contents("http://openweathermap.org/help/city_list.txt");
-        if (strpos($value, 'Bedzin') !== false) {
-            $cityList = explode(PHP_EOL, $value);
-            $matches = preg_grep('~Bedzin~', $cityList);
-            var_dump($matches);
-            $key = key($matches);
-            var_dump($key);
-            preg_match('~[0-9]{7}~', $matches[$key], $match);
-            var_dump($match);
-            return new Response("Działam");
+        if ($request->request->get('city'))
+        {
+            $cityName = $request->request->get('city');
+            var_dump($cityName);
+            $cityName= strtolower($cityName);
+            var_dump($cityName);
+            $cityName = str_replace(array('ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż', 'Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'), array('a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z'), $cityName);
+            var_dump($cityName);
+            $cityName = explode(' ', $cityName);
+            var_dump($cityName);
+            for ($i = 0; $i != count($cityName); $i++) {
+                ucfirst($cityName[$i]);
+            }
+            $cityName = implode(' ', $cityName);
+            var_dump($cityName);die();
+            $value = file_get_contents("http://openweathermap.org/help/city_list.txt");
 
+            if (strpos($value, $cityName) !== false) {
+                $cityList = explode(PHP_EOL, $value);
+                $matches = preg_grep("~$cityName~", $cityList);
+                $key = key($matches);
+                preg_match('~[0-9]{6,7}~', $matches[$key], $match);
+                var_dump($match);
+                return $this->render('WeatherBundle:Weather:create.html.twig', array(
+                    'cityCode' => $match,
+                    'cityName' => $cityName
+                ));
+            }
         }
-
     }
 }
