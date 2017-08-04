@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 {% block title %}Nowa strona {% endblock %}
 {% block body %}
-    <div style="margin-left: 40%; margin-right: 40%; border: solid 1px darkblue; width: 20%">
+    <div style="margin-left: 40%; margin-right: 40%; width: 20%">
         <form action="{{ asset('get') }}" method="post" style="margin-left: 5%">
             {% if selectedCity == null %}
                 {% set selectedCity = cities[0].name %}

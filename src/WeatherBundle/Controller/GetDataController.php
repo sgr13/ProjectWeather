@@ -145,8 +145,7 @@ class GetDataController extends Controller
      */
     public function adminPanelAction()
     {
-        return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array(
-        ));
+        return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array());
     }
 
     /**

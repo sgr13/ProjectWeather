@@ -37,4 +37,8 @@ $(document).ready(function() {
             $(this).attr('selected', 'selected');
         }
     })
+
+    $('#checkButton').click(function () {
+        alert("It make take a while...");
+    })
 });

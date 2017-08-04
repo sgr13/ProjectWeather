@@ -1,11 +1,11 @@
-
-{#{{ form_start(form) }}#}
-{#{{ form_widget(form) }}#}
-{#{{ form_end(form) }}#}
+{% extends "::base.html.twig" %}
+{% block title %}Nowa strona {% endblock %}
+{% block body %}
 {% if cityCode[0] is not defined %}
+    <h2>Enter the city name You would like to add to Weather City List </h2>
     <form method="post" action="{{ asset('findCity') }}">
         <input type="text" name="city">
-        <input type="submit" value="Check...">
+        <input type="submit" value="Check..." id="checkButton">
     </form>
     {% if failure is defined %}
         <span style="color: red">You cannot add city {{ cityName }} to Your Weather City List.</span><br>
@@ -18,3 +18,4 @@
             <input name="add" type="submit" value="Add">
         </form>
     {% endif %}
+{% endblock %}
