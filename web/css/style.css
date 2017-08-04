@@ -17,3 +17,16 @@ body {
     text-decoration: none;
     color: darkred;
 }
+
+.container {
+    margin-left: 15%;
+    margin-right: 15%;
+    text-align: center;
+}
+
+#weather {
+    margin-left: 40%;
+    margin-right: 40%;
+    width: 20%;
+    background-image: url("../photo/back.jpeg");
+}

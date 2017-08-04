@@ -1,3 +1,11 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-{{ form_end(form) }}
+{% extends "::base.html.twig" %}
+{% block title %}Nowa strona {% endblock %}
+{% block body %}
+    <div class="container">
+        <h3>Change city data:</h3>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

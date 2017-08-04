@@ -1,6 +1,7 @@
 {% extends "::base.html.twig" %}
 {% block title %}Nowa strona {% endblock %}
 {% block body %}
+    <div class="container">
 {% if cityCode[0] is not defined %}
     <h2>Enter the city name You would like to add to Weather City List </h2>
     <form method="post" action="{{ asset('findCity') }}">
@@ -11,11 +12,13 @@
         <span style="color: red">You cannot add city {{ cityName }} to Your Weather City List.</span><br>
     {% endif %}
 {% endif %}
-{#{{ cityCode[0] }}#}
+    {#{{ cityCode[0] }}#}
     {% if cityCode[0] is defined and cityName is defined %}
-       <span>You can add  <b>{{ cityName }}</b> to Your Weather City List</span> <br>
+        <span>You can add  <b>{{ cityName }}</b> to Your Weather City List</span> <br>
         <form method="post" action="{{ asset('add') }}">
             <input name="add" type="submit" value="Add">
         </form>
     {% endif %}
+    </div>
+
 {% endblock %}

@@ -17,8 +17,9 @@ class GetDataController extends Controller
     /**
      * @Route("/get", name="get")
      */
-    public function getAction(Request $request)
+    public function getAction(Request $request)  //1. Show weather box
     {
+        //1.1 Get all cities in DB and show them in select form
         $cityRepository = $this->getDoctrine()->getRepository('WeatherBundle:City');
         $cities = $cityRepository->findAll();
         $city = null;
@@ -27,6 +28,7 @@ class GetDataController extends Controller
             throw new NotFoundHttpException('error could not load database');
         }
 
+        //1.2 get selected data, split them and save city code to session, and city name pass to twig
         if ($request->request->get('selectCity')) {
             $selectedCity = $request->request->get('selectCity');
             $selectedCiteExploded = explode('|', $selectedCity);
@@ -45,7 +47,7 @@ class GetDataController extends Controller
     /**
      * @Route("/ajax", name="ajax")
      */
-    public function ajaxAction(Request $request)
+    public function ajaxAction(Request $request) // connect with openweather.org to update weather condtitions
     {
         $session = $request->getSession();
         $cityCode = $session->get('cityCode');
@@ -57,14 +59,13 @@ class GetDataController extends Controller
      * @Route("/add")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request) //add new city to weather city list
     {
         if ($request->request->get('add')) {
             $city = new City();
             $session = $request->getSession();
             $city->setName($session->get('city'));
             $city->setCode($session->get('code'));
-            var_dump($city);
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush();
@@ -78,7 +79,7 @@ class GetDataController extends Controller
      * @Route("/delete")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request) //delete selected city from weather city list
     {
 
         if ($request->request->get('cityToDelete')) {
@@ -105,10 +106,11 @@ class GetDataController extends Controller
     /**
      * @Route("/findCity")
      */
-    public function findCityAction(Request $request)
+    public function findCityAction(Request $request) //function, thanks to which we don't have to type city code.
     {
         if ($request->request->get('city')) {
             $cityName = $request->request->get('city');
+            //delete all polish alphabet special characters and set first character of every words to upper-case
             $cityName = str_replace(array('ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż', 'Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'), array('a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z', 'A', 'C', 'E', 'L', 'N', 'O', 'S', 'Z', 'Z'), $cityName);
             $cityName = strtolower($cityName);
             $cityName = explode(' ', $cityName);
@@ -119,6 +121,7 @@ class GetDataController extends Controller
             $value = file_get_contents("http://openweathermap.org/help/city_list.txt");
 
             if (strpos($value, $cityName) !== false) {
+                // find the city code by city name from web page city list
                 $cityList = explode(PHP_EOL, $value);
                 $matches = preg_grep("~$cityName~", $cityList);
                 $key = key($matches);
@@ -166,7 +169,7 @@ class GetDataController extends Controller
      * @Route("/edit/{id}", name="edit")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, $id) //edit selected city - name and code
     {
         $em = $this->getDoctrine()->getManager();
         $city = $em->getRepository('WeatherBundle:City')->find($id);

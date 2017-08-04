@@ -27,7 +27,7 @@ $(document).ready(function() {
         })
     }
     showWeather();
-    setInterval(showWeather, 30000);
+    setInterval(showWeather, 10000);
 
     var city = $('#citySelection').attr('city');
     console.log(city);
@@ -36,9 +36,9 @@ $(document).ready(function() {
         if ($(this).html() == city) {
             $(this).attr('selected', 'selected');
         }
-    })
+    });
 
     $('#checkButton').click(function () {
-        alert("It make take a while...");
+        alert("It may take a while...");
     })
 });

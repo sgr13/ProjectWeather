@@ -1,10 +1,12 @@
 {% extends "::base.html.twig" %}
 {% block title %}Nowa strona {% endblock %}
 {% block body %}
-    <h3>Select city You want to edit:</h3>
-    <ul>
-        {% for city in cities %}
-            <li>{{ city.name }} | <a href="{{ path('edit',{'id': city.id} ) }}"><button>Edit</button></a></li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h3>Select city You want to edit:</h3>
+        <ul>
+            {% for city in cities %}
+                <li>{{ city.name }} | <a href="{{ path('edit',{'id': city.id} ) }}"><button>Edit</button></a></li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
