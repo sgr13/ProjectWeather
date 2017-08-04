@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use WeatherBundle\Entity\City;
 use WeatherBundle\Form\CityType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class GetDataController extends Controller
 {
@@ -54,6 +55,7 @@ class GetDataController extends Controller
 
     /**
      * @Route("/add")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
     {
@@ -74,6 +76,7 @@ class GetDataController extends Controller
 
     /**
      * @Route("/delete")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function deleteAction(Request $request)
     {
@@ -138,6 +141,7 @@ class GetDataController extends Controller
 
     /**
      * @Route("/adminPanel", name="adminPanel")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function adminPanelAction()
     {
@@ -147,6 +151,7 @@ class GetDataController extends Controller
 
     /**
      * @Route("/selectCity", name="selectCity")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function selectCityAction(Request $request)
     {
@@ -160,6 +165,7 @@ class GetDataController extends Controller
 
     /**
      * @Route("/edit/{id}", name="edit")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editAction(Request $request, $id)
     {
