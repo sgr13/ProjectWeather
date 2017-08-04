@@ -1,10 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
     function showWeather() {
         $.ajax({
             method: 'get',
             url: "/ajax",
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 var obj = jQuery.parseJSON(data);
 
                 var dateTime = new Date();
@@ -18,7 +18,7 @@ $(document).ready(function() {
 
                 var main = obj.weather;
                 var iconPath = main[0].icon + ".png";
-                var src = "http://openweathermap.org/img/w/" + iconPath ;
+                var src = "http://openweathermap.org/img/w/" + iconPath;
                 $("#graphic").attr('src', src);
 
                 $("#time").html(time);
@@ -26,6 +26,7 @@ $(document).ready(function() {
             }
         })
     }
+
     showWeather();
     setInterval(showWeather, 10000);
 
