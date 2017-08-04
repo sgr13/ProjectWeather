@@ -75,7 +75,7 @@ class GetDataController extends Controller
     /**
      * @Route("/delete")
      */
-    public function editAction(Request $request)
+    public function deleteAction(Request $request)
     {
 
         if ($request->request->get('cityToDelete')) {
@@ -142,6 +142,42 @@ class GetDataController extends Controller
     public function adminPanelAction()
     {
         return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array(
+        ));
+    }
+
+    /**
+     * @Route("/selectCity", name="selectCity")
+     */
+    public function selectCityAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cities = $em->getRepository('WeatherBundle:City')->findAll();
+
+        return $this->render('WeatherBundle:Weather:selectCity.html.twig', array(
+            'cities' => $cities
+        ));
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit")
+     */
+    public function editAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $city = $em->getRepository('WeatherBundle:City')->find($id);
+        $form = $this->createForm('WeatherBundle\Form\CityType', $city);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
+            $city = $form->getData();
+            $em->persist($city);
+            $em->flush();
+            return $this->redirectToRoute('adminPanel');
+        }
+
+        return $this->render('WeatherBundle:Weather:edit.html.twig', array(
+            'form' => $form->createView()
         ));
     }
 }

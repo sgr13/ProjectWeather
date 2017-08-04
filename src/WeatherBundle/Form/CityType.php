@@ -16,7 +16,8 @@ class CityType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, array('label' => 'City:'))
-            ->add('save', SubmitType::class, array('label' => 'Check'))
+            ->add('code', NumberType::class, array('label' => 'Code'))
+            ->add('save', SubmitType::class, array('label' => 'Change'))
             ;
     }
 

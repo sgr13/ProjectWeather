@@ -4,7 +4,7 @@
     <h1>Select city that You want to delete from weather city list:</h1>
     <form action="{{ asset('delete') }}" method="post">
     {% for city in cities %}
-        <input type="radio" name="cityToDelete" value="{{ city.id }}">{{ city.name }}<br>
+        <input type="radio" name="cityToDelete" value="{{ city.id }}|{{ city.code }}">{{ city.name }}<br>
     {% endfor %}
         <input type="submit" value="Delete">
     </form>
