@@ -57,12 +57,12 @@ class GetDataController extends Controller
      */
     public function addAction(Request $request)
     {
-        $city = new City();
-        $form = $this->createForm(CityType::class, $city);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $city = $form->getData();
+        if ($request->request->get('add')) {
+            var_dump($request); die();
+            $city = new City();
+            $session = $request->getSession();
+            $city->setName($session->get('city'));
+            $city->setCode($session->get('code'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush();
@@ -99,18 +99,13 @@ class GetDataController extends Controller
         if ($request->request->get('city'))
         {
             $cityName = $request->request->get('city');
-            var_dump($cityName);
+            $cityName = str_replace(array('ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż', 'Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'), array('a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z', 'A', 'C', 'E', 'L', 'N', 'O', 'S', 'Z', 'Z'), $cityName);
             $cityName= strtolower($cityName);
-            var_dump($cityName);
-            $cityName = str_replace(array('ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż', 'Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'), array('a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z'), $cityName);
-            var_dump($cityName);
             $cityName = explode(' ', $cityName);
-            var_dump($cityName);
             for ($i = 0; $i != count($cityName); $i++) {
-                ucfirst($cityName[$i]);
+                $cityName[$i] = ucfirst($cityName[$i]);
             }
             $cityName = implode(' ', $cityName);
-            var_dump($cityName);die();
             $value = file_get_contents("http://openweathermap.org/help/city_list.txt");
 
             if (strpos($value, $cityName) !== false) {
@@ -119,6 +114,9 @@ class GetDataController extends Controller
                 $key = key($matches);
                 preg_match('~[0-9]{6,7}~', $matches[$key], $match);
                 var_dump($match);
+                $session = $request->getSession();
+                $session->set('city', $cityName);
+                $session->set('code', $match);
                 return $this->render('WeatherBundle:Weather:create.html.twig', array(
                     'cityCode' => $match,
                     'cityName' => $cityName

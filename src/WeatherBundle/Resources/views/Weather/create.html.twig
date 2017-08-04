@@ -2,9 +2,16 @@
 {#{{ form_start(form) }}#}
 {#{{ form_widget(form) }}#}
 {#{{ form_end(form) }}#}
-
+{% if cityCode[0] is not defined and cityName is not defined %}
 <form method="post" action="{{ asset('findCity') }}">
     <input type="text" name="city">
     <input type="submit" value="Check">
-    {{ cityCode[0] }}
 </form>
+{% endif %}
+{#{{ cityCode[0] }}#}
+    {% if cityCode[0] is defined and cityName is defined %}
+       <span>You can add  <b>{{ cityName }}</b> to Your weather city list</span> <br>
+        <form method="post" action="{{ asset('add') }}">
+            <button name="add">Add</button>
+        </form>
+    {% endif %}
