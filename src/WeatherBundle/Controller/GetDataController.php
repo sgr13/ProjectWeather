@@ -66,7 +66,7 @@ class GetDataController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush();
-            return $this->redirectToRoute('get');
+            return $this->redirectToRoute('adminPanel');
         }
 
         return $this->render('WeatherBundle:Weather:create.html.twig', array());
@@ -83,7 +83,9 @@ class GetDataController extends Controller
             $cityToDelete = $em->getRepository('WeatherBundle:City')->find($request->request->get('cityToDelete'));
             $em->remove($cityToDelete);
             $em->flush();
-            return $this->redirectToRoute('get');
+            return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array(
+                'deletedCity' => $cityToDelete
+            ));
         }
         $cityRepository = $this->getDoctrine()->getRepository('WeatherBundle:City');
         $cities = $cityRepository->findAll();
@@ -125,17 +127,21 @@ class GetDataController extends Controller
                     'cityCode' => $match,
                     'cityName' => $cityName
                 ));
+            } else {
+                return $this->render('WeatherBundle:Weather:create.html.twig', array(
+                    'failure' => 0,
+                    'cityName' => $cityName
+                ));
             }
         }
     }
 
     /**
-     * @Route("/adminPanel")
+     * @Route("/adminPanel", name="adminPanel")
      */
     public function adminPanelAction()
     {
         return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array(
-
         ));
     }
 }

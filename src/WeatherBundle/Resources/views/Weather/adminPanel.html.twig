@@ -17,4 +17,9 @@
             <span>Delete City</span>
         </div>
     </a>
+    <div style="clear: both"></div>
+    <br><hr>
+    {% if deletedCity is defined %}
+        <span style="color: green">You have succesfully deleted city {{ deletedCity.name }} from Weather City List</span>
+    {% endif %}
 {% endblock %}
