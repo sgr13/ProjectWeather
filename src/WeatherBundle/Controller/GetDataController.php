@@ -58,20 +58,18 @@ class GetDataController extends Controller
     public function addAction(Request $request)
     {
         if ($request->request->get('add')) {
-            var_dump($request); die();
             $city = new City();
             $session = $request->getSession();
             $city->setName($session->get('city'));
             $city->setCode($session->get('code'));
+            var_dump($city);
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush();
             return $this->redirectToRoute('get');
         }
 
-        return $this->render('WeatherBundle:Weather:create.html.twig', array(
-            'form' => $form->createView()
-        ));
+        return $this->render('WeatherBundle:Weather:create.html.twig', array());
     }
 
     /**
@@ -79,6 +77,14 @@ class GetDataController extends Controller
      */
     public function editAction(Request $request)
     {
+
+        if ($request->request->get('cityToDelete')) {
+            $em = $this->getDoctrine()->getManager();
+            $cityToDelete = $em->getRepository('WeatherBundle:City')->find($request->request->get('cityToDelete'));
+            $em->remove($cityToDelete);
+            $em->flush();
+            return $this->redirectToRoute('get');
+        }
         $cityRepository = $this->getDoctrine()->getRepository('WeatherBundle:City');
         $cities = $cityRepository->findAll();
 
@@ -96,11 +102,10 @@ class GetDataController extends Controller
      */
     public function findCityAction(Request $request)
     {
-        if ($request->request->get('city'))
-        {
+        if ($request->request->get('city')) {
             $cityName = $request->request->get('city');
             $cityName = str_replace(array('ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż', 'Ą', 'Ć', 'Ę', 'Ł', 'Ń', 'Ó', 'Ś', 'Ź', 'Ż'), array('a', 'c', 'e', 'l', 'n', 'o', 's', 'z', 'z', 'A', 'C', 'E', 'L', 'N', 'O', 'S', 'Z', 'Z'), $cityName);
-            $cityName= strtolower($cityName);
+            $cityName = strtolower($cityName);
             $cityName = explode(' ', $cityName);
             for ($i = 0; $i != count($cityName); $i++) {
                 $cityName[$i] = ucfirst($cityName[$i]);
@@ -113,15 +118,24 @@ class GetDataController extends Controller
                 $matches = preg_grep("~$cityName~", $cityList);
                 $key = key($matches);
                 preg_match('~[0-9]{6,7}~', $matches[$key], $match);
-                var_dump($match);
                 $session = $request->getSession();
                 $session->set('city', $cityName);
-                $session->set('code', $match);
+                $session->set('code', $match[0]);
                 return $this->render('WeatherBundle:Weather:create.html.twig', array(
                     'cityCode' => $match,
                     'cityName' => $cityName
                 ));
             }
         }
+    }
+
+    /**
+     * @Route("/adminPanel")
+     */
+    public function adminPanelAction()
+    {
+        return $this->render('WeatherBundle:Weather:adminPanel.html.twig', array(
+
+        ));
     }
 }

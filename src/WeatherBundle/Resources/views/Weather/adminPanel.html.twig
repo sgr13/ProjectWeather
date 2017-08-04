@@ -1,0 +1,20 @@
+{% extends "::base.html.twig" %}
+{% block title %}Nowa strona {% endblock %}
+{% block body %}
+    <h1>Welcome to Admin Panel.</h1>
+    <a href="{{ asset('add') }}">
+        <div class="adminButton">
+            <span>Add City</span>
+        </div>
+    </a>
+    <a href="{{ asset('edit') }}">
+        <div class="adminButton">
+            <span>Edit City</span>
+        </div>
+    </a>
+    <a href="{{ asset('delete') }}">
+        <div class="adminButton">
+            <span>Delete City</span>
+        </div>
+    </a>
+{% endblock %}

@@ -1,3 +1,19 @@
 body {
     background-color: #5eb5e0;
 }
+
+.adminButton {
+    width: 250px;
+    height: 150px;
+    background-color: lightgrey;
+    float: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 130%;
+    text-align: center;
+}
+
+.adminButton a {
+    text-decoration: none;
+    color: darkred;
+}
